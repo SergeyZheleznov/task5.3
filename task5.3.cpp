@@ -1,46 +1,52 @@
 #include <iostream>
-#include <string>
 #include <windows.h>
 
 class Figure {
-public:
+protected:
     int sides_count;
     std::string name;
-    std::string quality;
 
 public:
-
     Figure()
     {
+        sides_count = 0;
         name = "Фигура";
-        quality = "Правильная";
-        sides_count = 0;    
     }
 
-    Figure( std::string name, std::string quantity, int sides_count)
+    Figure(int sides_count, std::string name)
     {
+        this->sides_count = sides_count;
         this->name = name;
-        this->quality = quantity;
-        this->sides_count = sides_count;   
     }
-    
-    virtual void print_info()
-    {
-        std::cout << name << ": " << std::endl;
-        std::cout << quality << std::endl;;
-        std::cout << "Количество сторон: " << sides_count << std::endl;
-        std::cout << std::endl;
+
+    std::string get_name() {
+        return name;
     };
 
-    bool check()
-    {
-
+    int get_sides_count() {
+        return sides_count;
     };
+
+    bool check() {
+        return 1;
+    };
+
+    void print_info() {
+        std::cout << get_name() << std::endl;
+        if (check() == 1) {
+            std::cout << "Правильная" << std::endl;
+        }
+        else {
+            std::cout << "Неправильная" << std::endl;
+        }
+        std::cout << "Количество сторон: " << get_sides_count() << std::endl << std::endl;
+    }    
 };
 
 class Triangle : public Figure
 {
 public:
+
     int length_side_a;
     int length_side_b;
     int length_side_c;
@@ -50,6 +56,8 @@ public:
 
     Triangle()
     {
+        sides_count = 3;
+        name = "Треугольник";
         length_side_a = 10;
         length_side_b = 20;
         length_side_c = 30;
@@ -69,131 +77,103 @@ public:
         this->value_angle_C = value_angle_C;
     }
 
-    void print_info() override
+    int get_lenght_side_a()
     {
-        std::cout << "Треугольник" << ": " << std::endl;
-        std::cout << "Правильная" << std::endl;
-        std::cout << "Количество сторон: " << 3 << std::endl;
-        print_sides_length();
-        print_angles_value();
-
-        std::cout << std::endl;
+        return length_side_a;
     };
 
-    void get_lenght_side_a()
+    int get_lenght_side_b()
     {
-        this->length_side_a;
+        return length_side_b;
     };
 
-    void get_lenght_side_b()
+    int get_lenght_side_c()
     {
-        length_side_b;
+        return length_side_c;
     };
 
-    void get_lenght_side_c()
+    int get_value_angle_A()
     {
-        length_side_c = 30;
+        return value_angle_A;
     };
 
-    void get_value_angle_A()
+    int get_value_angle_B()
     {
-        value_angle_A;
+        return value_angle_B;
     };
 
-    void get_value_angle_B()
+    int get_value_angle_C()
     {
-        value_angle_B;
+        return value_angle_C;
     };
 
-    void get_value_angle_C()
-    {
-        value_angle_C;
+    bool check() {
+        if (((length_side_a == length_side_b) && (length_side_b == length_side_c) && (length_side_a == length_side_c)) &&
+            ((value_angle_A == value_angle_B) && (value_angle_B == value_angle_C) && (value_angle_A == value_angle_C)))
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
     };
 
-    void print_sides_length()
-    {
-        std::cout << "Стороны: " << "a = " << length_side_a << " b = " << length_side_b << " c = " << length_side_c << std::endl;
-    };
-
-    void print_angles_value()
-    {
-        std::cout << "Углы: " << "A = " << value_angle_A << " B = " << value_angle_B << " C = " << value_angle_C << std::endl << std::endl;
-    };
+    void print_info() {
+        std::cout << get_name() << std::endl;
+        if (check() == 1) {
+            std::cout << "Правильная" << std::endl;
+        }
+        else {
+            std::cout << "Неправильная" << std::endl;
+        }
+        std::cout << "Количество сторон: " << get_sides_count() << std::endl;
+        std::cout << "Стороны: " << " a = " << get_lenght_side_a() << " b = " << get_lenght_side_b() << " c = " << get_lenght_side_c() << std::endl;
+        std::cout << "Углы: " << " А = " << get_value_angle_A() << " B = " << get_value_angle_B() << " C = " << get_value_angle_C() << std::endl << std::endl;
+    }
 };
 
 class Right_triangle : public Triangle
 {
 public:
-
     Right_triangle()
     {
+        name = "Прямоугольный треугольник";
         value_angle_C = 90;
     }
 
-    void get_name() {
-        std::cout << "Прямоугольный треугольник" << std::endl;
-    }
-
-    void print_info() override
+    Right_triangle(int sides_count, std::string name, int length_side_a, int length_side_b, int length_side_c,
+        int value_angle_A, int value_angle_B, int value_angle_C)
     {
-        get_name();
-        std::cout << "Правильная" << std::endl;
-        std::cout << "Количество сторон: " << 3 << std::endl;
-        print_sides_length();
-        print_angles_value();
-
-        std::cout << std::endl;
-    };
+        this->length_side_a = length_side_a;
+        this->length_side_b = length_side_b;
+        this->length_side_c = length_side_c;
+        this->value_angle_A = value_angle_A;
+        this->value_angle_B = value_angle_B;
+        this->value_angle_C = value_angle_C;
+    }
 };
 
 class Isosceles_triangle : public Triangle {
 public:
-
     Isosceles_triangle()
     {
+        name = "Равнобедренный треугольник";
         length_side_c = 10;
         value_angle_C = 50;
     }
-
-    void get_name() {
-        std::cout << "Равнобедренный треугольник" << std::endl;
-    }
-
-    void print_info() override
-    {
-        get_name();
-        std::cout << "Неправильная" << std::endl;
-        std::cout << "Количество сторон: " << 3 << std::endl;
-        print_sides_length();
-        print_angles_value();
-
-        std::cout << std::endl;
-    };
 };
 
 class Equilateral_triangle : public Triangle {
 public:
 
     Equilateral_triangle()
+
     {
+        name = "Равносторонний треугольник";
         length_side_a = length_side_b = length_side_c = 30;
         value_angle_A = value_angle_B = value_angle_C = 60;
     }
-
-    void get_name() {
-        std::cout << "Равносторонний треугольник" << std::endl;
-    }
-
-    void print_info() override
-    {
-        get_name();
-        std::cout << "Неправильная" << std::endl;
-        std::cout << "Количество сторон: " << 3 << std::endl;
-        print_sides_length();
-        print_angles_value();
-
-        std::cout << std::endl;
-    };
 };
 
 class Quadrangle : public Triangle
@@ -204,6 +184,7 @@ public:
 
     Quadrangle()
     {
+        name = "Четырёхугольник";
         length_side_a = 10;
         length_side_d = 20;
         length_side_c = 30;
@@ -220,140 +201,90 @@ public:
         this->value_angle_D = value_angle_D;
     }
 
-    void get_name() {
-        std::cout << "Четырёхугольник" << std::endl;
+    int get_lenght_side_d()
+    {
+        return length_side_d;
+    };
+
+    int get_value_angle_D()
+    {
+        return value_angle_D;
+    };
+
+    bool check() {
+        if (((length_side_a == length_side_b) && (length_side_b == length_side_c) && (length_side_c == length_side_d) && (length_side_a == length_side_d)) &&
+            ((value_angle_A == value_angle_B) && (value_angle_B == value_angle_C) && (value_angle_C == value_angle_D) && (value_angle_A == value_angle_D)))
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    };
+
+    void print_info() {
+        std::cout << get_name() << std::endl;
+        if (check() == 1) {
+            std::cout << "Правильная" << std::endl;
+        }
+        else {
+            std::cout << "Неправильная" << std::endl;
+        }
+        std::cout << "Количество сторон: " << get_sides_count() << std::endl;
+        std::cout << "Стороны: " << " a = " << get_lenght_side_a() << " b = " << get_lenght_side_b() << " c = " << get_lenght_side_c() <<
+            " d = " << get_lenght_side_d() << std::endl;
+        std::cout << "Углы: " << " А = " << get_value_angle_A() << " B = " << get_value_angle_B() << " C = " << get_value_angle_C() <<
+            " D = " << get_value_angle_D() << std::endl << std::endl;
     }
-
-    void print_sides_length()
-    {
-        std::cout << "Стороны: " << "a = " << length_side_a << " b = " << length_side_b <<
-            " c = " << length_side_c << " d = " << length_side_d << std::endl;
-    };
-
-    void print_angles_value()
-    {
-        std::cout << "Углы: " << "A = " << value_angle_A << " B = " << value_angle_B <<
-            " C = " << value_angle_C << " D = " << value_angle_D << std::endl << std::endl;
-    };
-
-    void print_info() override
-    {
-        get_name();
-        std::cout << "Неправильная" << std::endl;
-        std::cout << "Количество сторон: " << 4 << std::endl;
-        print_sides_length();
-        print_angles_value();
-
-        std::cout << std::endl;
-    };
 };
 
 class Parallelogram : public Quadrangle
 {
 public:
-
-    void get_name() {
-        std::cout << "Параллелограмм" << std::endl;
-    }
-
     Parallelogram()
     {
+        name = "Параллелограмм";
         length_side_a = length_side_c = 20;
         length_side_b = length_side_d = 30;
         value_angle_A = value_angle_C = 30;
         value_angle_B = value_angle_D = 40;
     }
-
-    void print_info() override
-    {
-        get_name();
-        std::cout << "Неправильная" << std::endl;
-        std::cout << "Количество сторон: " << 4 << std::endl;
-        print_sides_length();
-        print_angles_value();
-
-        std::cout << std::endl;
-    };
 };
 
 class Rectangle1 : public Parallelogram
 {
 public:
-
-    void get_name() {
-        std::cout << "Прямоугольник" << std::endl;
-    }
-
     Rectangle1()
     {
+        name = "Прямоугольник";
         length_side_a = length_side_c = 10;
         length_side_b = length_side_d = 20;
         value_angle_A = value_angle_C = value_angle_B = value_angle_D = 90;
     }
-
-    void print_info() override
-    {
-        get_name();
-        std::cout << "Правильная" << std::endl;
-        std::cout << "Количество сторон: " << 4 << std::endl;
-        print_sides_length();
-        print_angles_value();
-
-        std::cout << std::endl;
-    };
 };
 
 class Rhombus : public Parallelogram
 {
 public:
-
-    void get_name() {
-        std::cout << "Ромб" << std::endl;
-    }
-
     Rhombus()
     {
+        name = "Ромб";
         length_side_a = length_side_b = length_side_c = length_side_d = 30;
         value_angle_A = value_angle_C = 30;
         value_angle_B = value_angle_D = 40;
     }
-
-    void print_info() override
-    {
-        get_name();
-        std::cout << "Неправильная" << std::endl;
-        std::cout << "Количество сторон: " << 4 << std::endl;
-        print_sides_length();
-        print_angles_value();
-
-        std::cout << std::endl;
-    };
 };
 
 class Square : public Quadrangle
 {
 public:
-
-    void get_name() {
-        std::cout << "Квадрат" << std::endl;
-    }
-
     Square()
     {
+        name = "Квадрат";
         length_side_a = length_side_b = length_side_c = length_side_d = 20;
         value_angle_A = value_angle_B = value_angle_C = value_angle_D = 90;
     }
-
-    void print_info() override
-    {
-        get_name();
-        std::cout << "Правильная" << std::endl;
-        std::cout << "Количество сторон: " << 4 << std::endl;
-        print_sides_length();
-        print_angles_value();
-
-        std::cout << std::endl;
-    };
 };
 
 int main()
@@ -364,43 +295,32 @@ int main()
     std::system("chcp 1251");
 
     Figure f;
-    Triangle tr;
+    f.print_info();
 
-    Figure* pointer_f = &f;
-    pointer_f->print_info(); 
-    
-    Triangle* pointer_tr = &tr;
-    pointer_tr->print_info();
-    
+    Triangle tr;
+    tr.print_info();
+
     Right_triangle rt;
-    Right_triangle* pointer_rt = &rt;
-    pointer_rt->print_info();
+    rt.print_info();
 
     Isosceles_triangle itr;
-    Isosceles_triangle* pointer_itr = &itr;
-    pointer_itr->print_info();
+    itr.print_info();
 
     Equilateral_triangle etr;
-    Equilateral_triangle* pointer_etr = &etr;
-    pointer_etr ->print_info();
+    etr.print_info();
 
     Quadrangle qv;
-    Quadrangle* pointer_qv = &qv;
-    pointer_qv->print_info();
-  
+    qv.print_info();
+
     Rectangle1 rct;
-    Rectangle1* pointer_rct = &rct;
-    pointer_rct-> print_info();
+    rct.print_info();
 
     Square sq;
-    Square* pointer_sq = &sq;
-    pointer_sq->print_info();
+    sq.print_info();
 
     Parallelogram prl;
-    Parallelogram* pointer_prl = &prl;
-    pointer_sq ->print_info();
+    prl.print_info();
 
     Rhombus rh;
-    Rhombus* pointer_rh = &rh;
-    pointer_rh->print_info();
+    rh.print_info();
 }
