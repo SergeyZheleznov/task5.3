@@ -19,19 +19,28 @@ public:
         this->name = name;
     }
 
-    std::string get_name() {
+    std::string get_name()
+    {
         return name;
     };
 
-    int get_sides_count() {
+    int get_sides_count()
+    {
         return sides_count;
     };
 
-    bool check() {
-        return 1;
+    bool virtual check()
+    {
+        if (get_sides_count() == 0) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
     };
 
-    void print_info() {
+    void virtual print_info()
+    {
         std::cout << get_name() << std::endl;
         if (check() == 1) {
             std::cout << "Правильная" << std::endl;
@@ -39,7 +48,7 @@ public:
         else {
             std::cout << "Неправильная" << std::endl;
         }
-        std::cout << "Количество сторон: " << get_sides_count() << std::endl << std::endl;
+        std::cout << "Количество сторон: " << get_sides_count() << std::endl;
     }    
 };
 
@@ -67,7 +76,7 @@ public:
     }
 
     Triangle(int length_side_a, int length_side_b, int length_side_c,
-        int value_angle_A, int value_angle_B, int value_angle_C)
+        int value_angle_A, int value_angle_B, int value_angle_C) : Triangle()
     {
         this->length_side_a = length_side_a;
         this->length_side_b = length_side_b;
@@ -75,8 +84,6 @@ public:
         this->value_angle_A = value_angle_A;
         this->value_angle_B = value_angle_B;
         this->value_angle_C = value_angle_C;
-        sides_count = 3;
-        name = "Треугольник";
     }
 
     int get_lenght_side_a()
@@ -109,9 +116,9 @@ public:
         return value_angle_C;
     };
 
-    bool check() {
-        if (((length_side_a == length_side_b) && (length_side_b == length_side_c) && (length_side_a == length_side_c)) &&
-            ((value_angle_A == value_angle_B) && (value_angle_B == value_angle_C) && (value_angle_A == value_angle_C)))
+    bool check() override {
+        if ((sides_count == 3) &&
+            ((value_angle_A + value_angle_B + value_angle_C) == 180)) 
         {
             return 1;
         }
@@ -121,15 +128,9 @@ public:
         }
     };
 
-    void print_info() {
-        std::cout << get_name() << std::endl;
-        if (check() == 1) {
-            std::cout << "Правильная" << std::endl;
-        }
-        else {
-            std::cout << "Неправильная" << std::endl;
-        }
-        std::cout << "Количество сторон: " << get_sides_count() << std::endl;
+    void print_info() override 
+    {
+        ::Figure::print_info();
         std::cout << "Стороны: " << " a = " << get_lenght_side_a() << " b = " << get_lenght_side_b() << " c = " << get_lenght_side_c() << std::endl;
         std::cout << "Углы: " << " А = " << get_value_angle_A() << " B = " << get_value_angle_B() << " C = " << get_value_angle_C() << std::endl << std::endl;
     }
@@ -145,16 +146,26 @@ public:
     }
 
     Right_triangle(int length_side_a, int length_side_b, int length_side_c,
-        int value_angle_A, int value_angle_B)
+        int value_angle_A, int value_angle_B) : Right_triangle()
     {
         this->length_side_a = length_side_a;
         this->length_side_b = length_side_b;
         this->length_side_c = length_side_c;
         this->value_angle_A = value_angle_A;
         this->value_angle_B = value_angle_B;
-        value_angle_C = 90;
-        name = "Прямоугольный треугольник";
     }
+
+    bool check() override {
+        if ((sides_count == 3) &&
+            (value_angle_C == 90))
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    };
 };
 
 class Isosceles_triangle : public Triangle {
@@ -169,7 +180,7 @@ public:
     }
 
     Isosceles_triangle(int length_side_a, int length_side_b,
-        int value_angle_A, int value_angle_B)
+        int value_angle_A, int value_angle_B) : Isosceles_triangle()
     {
         this->length_side_a = length_side_a;
         this->length_side_b = length_side_b;
@@ -177,8 +188,20 @@ public:
         this->value_angle_A = value_angle_A;
         this->value_angle_B = value_angle_B;
         value_angle_C = value_angle_A;
-        name = "Равнобедренный треугольник";
     }
+
+    bool check() override {
+        if ((sides_count == 3) &&
+            (length_side_a == length_side_c) &&
+            (value_angle_A == value_angle_C))
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    };
 };
 
 class Equilateral_triangle : public Triangle {
@@ -194,7 +217,7 @@ public:
         value_angle_C = 60;
     }
 
-    Equilateral_triangle(int length_side_a)
+    Equilateral_triangle(int length_side_a) : Equilateral_triangle()
     {
         this->length_side_a = length_side_a;
         length_side_b = length_side_a;
@@ -202,8 +225,20 @@ public:
         value_angle_A = 60;
         value_angle_B = value_angle_A;
         value_angle_C = value_angle_B;
-        name = "Равносторонний треугольник";
     }
+
+    bool check() override {
+        if ((sides_count == 3) &&
+            ((length_side_a == length_side_b) && (length_side_a == length_side_c) && (length_side_b == length_side_c)) &&
+            (value_angle_A == 60) && (value_angle_B == 60) && (value_angle_C == 60))
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    };
 };
 
 class Quadrangle : public Triangle
@@ -215,18 +250,19 @@ public:
     Quadrangle()
     {
         name = "Четырёхугольник";
+        sides_count = 4;
         length_side_a = 10;
         length_side_b = 20;
         length_side_c = 30;
         length_side_d = 50;
-        value_angle_A = 50;
-        value_angle_B = 60;
-        value_angle_C = 60;
-        value_angle_D = 80;
+        value_angle_A = 90;
+        value_angle_B = 90;
+        value_angle_C = 90;
+        value_angle_D = 90;
     }
 
     Quadrangle(int length_side_a, int length_side_b, int length_side_c, int length_side_d,
-        int value_angle_A, int value_angle_B, int value_angle_C, int value_angle_D)
+        int value_angle_A, int value_angle_B, int value_angle_C, int value_angle_D) : Quadrangle()
     {
         this->length_side_a = length_side_a;
         this->length_side_b = length_side_b;
@@ -236,8 +272,6 @@ public:
         this->value_angle_B = value_angle_B;
         this->value_angle_C = value_angle_C;
         this->value_angle_D = value_angle_D;
-        sides_count = 4;
-        name = "Четырёхугольник";
     }
 
     int get_lenght_side_d()
@@ -250,9 +284,9 @@ public:
         return value_angle_D;
     };
 
-    bool check() {
-        if (((length_side_a == length_side_b) && (length_side_b == length_side_c) && (length_side_c == length_side_d) && (length_side_a == length_side_d)) &&
-            ((value_angle_A == value_angle_B) && (value_angle_B == value_angle_C) && (value_angle_C == value_angle_D) && (value_angle_A == value_angle_D)))
+    bool check() override {
+        if ((sides_count == 4) &&
+            ((value_angle_A + value_angle_B + value_angle_C + value_angle_D) == 360))
         {
             return 1;
         }
@@ -262,15 +296,8 @@ public:
         }
     };
 
-    void print_info() {
-        std::cout << get_name() << std::endl;
-        if (check() == 1) {
-            std::cout << "Правильная" << std::endl;
-        }
-        else {
-            std::cout << "Неправильная" << std::endl;
-        }
-        std::cout << "Количество сторон: " << get_sides_count() << std::endl;
+    void print_info() override{
+        ::Figure::print_info();
         std::cout << "Стороны: " << " a = " << get_lenght_side_a() << " b = " << get_lenght_side_b() << " c = " << get_lenght_side_c() <<
             " d = " << get_lenght_side_d() << std::endl;
         std::cout << "Углы: " << " А = " << get_value_angle_A() << " B = " << get_value_angle_B() << " C = " << get_value_angle_C() <<
@@ -296,7 +323,7 @@ public:
     }
 
     Parallelogram(int length_side_a, int length_side_b,
-        int value_angle_A, int value_angle_B)
+        int value_angle_A, int value_angle_B) : Parallelogram()
     {
         this->length_side_a = length_side_a;
         this->length_side_b = length_side_b;
@@ -306,9 +333,20 @@ public:
         this->value_angle_B = value_angle_B;
         value_angle_C = value_angle_A;
         value_angle_D = value_angle_B;
-        sides_count = 4;
-        name = "Параллелограмм";
     }
+
+    bool check() override {
+        if ((sides_count == 4) &&
+            ((length_side_a == length_side_c) && (length_side_b == length_side_d)) &&
+            ((value_angle_A == value_angle_C) && (value_angle_B == value_angle_D)))
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    };
 };
 
 class Rectangle1 : public Parallelogram
@@ -327,7 +365,7 @@ public:
         value_angle_D = 90;
     }
 
-    Rectangle1(int length_side_a, int length_side_b)
+    Rectangle1(int length_side_a, int length_side_b) : Rectangle1()
     {
         this->length_side_a = length_side_a;
         length_side_b = length_side_b;
@@ -337,9 +375,20 @@ public:
         value_angle_B = value_angle_A;
         value_angle_C = value_angle_B;
         value_angle_D = value_angle_C;
-        sides_count = 4;
-        name = "Прямоугольник";
     }
+
+    bool check() override {
+        if ((sides_count == 4) &&
+            ((length_side_a == length_side_c) && (length_side_b == length_side_d)) &&
+            ((value_angle_A == 90) && (value_angle_B = 90) && (value_angle_C == 90) && (value_angle_D == 90)))
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    };
 };
 
 class Rhombus : public Parallelogram
@@ -358,7 +407,7 @@ public:
         value_angle_D = 40;
     }
 
-    Rhombus(int length_side_a, int value_angle_A, int value_angle_B)
+    Rhombus(int length_side_a, int value_angle_A, int value_angle_B) : Rhombus()
     {
         this->length_side_a = length_side_a;
         length_side_b = length_side_a;
@@ -368,9 +417,20 @@ public:
         this->value_angle_B = value_angle_B;
         value_angle_C = value_angle_A;
         value_angle_D = value_angle_B;
-        sides_count = 4;
-        name = "Ромб";
     }
+
+    bool check() override {
+        if ((sides_count == 4) &&
+            ((length_side_a == length_side_b) && (length_side_a == length_side_c) && (length_side_a == length_side_d)) &&
+            ((value_angle_A == value_angle_C) && (value_angle_B == value_angle_D)))
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    };
 };
 
 class Square : public Quadrangle
@@ -389,7 +449,7 @@ public:
         value_angle_D = 90;
     }
 
-    Square(int length_side_a)
+    Square(int length_side_a) : Square()
     {
         this->length_side_a = length_side_a;
         length_side_b = length_side_a;
@@ -399,9 +459,20 @@ public:
         value_angle_B = value_angle_A;
         value_angle_C = value_angle_B;
         value_angle_D = value_angle_C;
-        sides_count = 4;
-        name = "Квадрат";
     }
+
+    bool check() override {
+        if ((sides_count == 4) &&
+            ((length_side_a == length_side_b) && (length_side_a == length_side_c) && (length_side_a == length_side_d)) &&
+            ((value_angle_A == 90) && (value_angle_B = 90) && (value_angle_C == 90) && (value_angle_D == 90)))
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    };
 };
 
 int main()
@@ -412,35 +483,46 @@ int main()
     std::system("chcp 1251");
 
     Figure f;
-    f.print_info();
+    Figure* par_f = &f;
+    par_f->print_info();
+
+    std::cout << std::endl;
 
     Triangle tr1;
     tr1.print_info();
     Triangle tr2(1,2,3,60,40,10);
-    Triangle* par_tr2 = &tr2;
+    Figure* par_tr2 = &tr2;
     par_tr2->print_info();
 
     Right_triangle rt;
-    rt.print_info();
+    Figure* par_rt = &rt;
+    par_rt->print_info();
 
     Isosceles_triangle itr;
-    itr.print_info();
+    Figure* par_itr = &itr;
+    par_itr->print_info();
 
     Equilateral_triangle etr;
-    etr.print_info();
+    Figure* par_etr = &etr;
+    par_etr->print_info();
 
     Quadrangle qv;
-    qv.print_info();
+    Figure* par_qv = &qv;
+    par_qv->print_info();
 
     Rectangle1 rct;
-    rct.print_info();
+    Figure* par_rct = &rct;
+    par_rct->print_info();
 
     Square sq;
-    sq.print_info();
+    Figure* par_sq = &sq;
+    par_sq->print_info();
 
     Parallelogram prl;
-    prl.print_info();
+    Figure* par_prl = &prl;
+    par_prl->print_info();
 
     Rhombus rh;
-    rh.print_info();
+    Figure* par_rh = &rh;
+    par_rh->print_info();
 }
